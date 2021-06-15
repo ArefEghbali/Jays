@@ -8,3 +8,33 @@ body {
 #__next {
     height: 100%;
 }
+
+a {
+    text-decoration: none !important;
+}
+
+.btn {
+    display: flex !important;
+    align-items: center !important;
+
+    &:focus {
+        outline: none !important;
+        box-shadow: none !important;
+    }
+}
+
+input {
+    &:focus {
+        outline: none !important;
+        box-shadow: none !important;
+    }
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+p {
+    margin: 0px !important;
+}

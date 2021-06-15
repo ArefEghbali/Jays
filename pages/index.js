@@ -1,7 +1,9 @@
 import Head from 'next/head'
 import Image from 'next/image'
-
+import Link from 'next/link'
 import Topbar from '../Components/Topbar/Topbar'
+
+import { Plus, Minus, ArrowRight } from 'react-feather'
 
 export default function Home() {
     return (
@@ -20,6 +22,96 @@ export default function Home() {
                 />
             </Head>
             <Topbar />
+            <div className='hero'>
+                <div className='container'>
+                    <div className='row'>
+                        <div className='col-12 col-lg-6'>
+                            <div className='description'>
+                                <h1>
+                                    Feel light as a <br /> Feather.
+                                </h1>
+                                <h3 className='my-3'>Adidas White Sneaker</h3>
+                                <h4 className='fw-bold'>$45</h4>
+                                <div className='d-flex align-items-center justify-content-start mt-3'>
+                                    <button className='btn btn-primary'>
+                                        Add To Cart
+                                    </button>
+                                    <div className='quantity'>
+                                        <button className='btn'>
+                                            <Minus size={24} />
+                                        </button>
+                                        <h4>1</h4>
+                                        <button className='btn'>
+                                            <Plus size={24} />
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div className='col-12 col-md-6'>
+                            <div className='photo-section'>
+                                <Image
+                                    src='/static/images/Addidas.png'
+                                    alt='Addidas Sneaker'
+                                    width='700px'
+                                    height='537px'
+                                />
+                                <div className='circle first'></div>
+                                <div className='circle second'></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <h2 className='fw-bold text-center mt-5 mb-3'>
+                Sneakers for Everyone
+            </h2>
+            <div className='container'>
+                <div className='row'>
+                    <div className='col-12 col-lg-6'>
+                        <div className='collection'>
+                            <img
+                                src='/static/images/forwomen.jpg'
+                                alt='Women Collection'
+                                width='100%'
+                                height='400px'
+                            />
+                            <h2>For Women</h2>
+                            <Link href='/collection/women'>
+                                <a>
+                                    Check Collection{' '}
+                                    <ArrowRight size={24} className='ms-2' />
+                                </a>
+                            </Link>
+                            <div className='overlay' />
+                        </div>
+                    </div>
+                    <div className='col-12 col-lg-6'>
+                        <div className='collection'>
+                            <img
+                                src='/static/images/formen.jpg'
+                                alt='Men Collection'
+                                width='100%'
+                                height='400px'
+                            />
+                            <h2>For Men</h2>
+                            <Link href='/collection/men'>
+                                <a>
+                                    Check Collection{' '}
+                                    <ArrowRight size={24} className='ms-2' />
+                                </a>
+                            </Link>
+                            <div className='overlay' />
+                        </div>
+                    </div>
+                </div>
+                <div className='row mt-5'>
+                    <div className='col-3 d-none d-lg-flex'></div>
+                    <div className='col-12 col-lg-9'>
+                        <h2 className='fw-bold'>New Products</h2>
+                    </div>
+                </div>
+            </div>
         </div>
     )
 }
