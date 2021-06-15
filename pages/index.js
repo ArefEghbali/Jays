@@ -5,6 +5,8 @@ import Topbar from '../Components/Topbar/Topbar'
 
 import { Plus, Minus, ArrowRight } from 'react-feather'
 
+import FilterBar from '../Components/FilterBar/FilterBar'
+
 export default function Home() {
     return (
         <div>
@@ -106,9 +108,11 @@ export default function Home() {
                     </div>
                 </div>
                 <div className='row mt-5'>
-                    <div className='col-3 d-none d-lg-flex'></div>
+                    <div className='col-3 d-none d-lg-flex'>
+                        <FilterBar />
+                    </div>
                     <div className='col-12 col-lg-9'>
-                        <h2 className='fw-bold'>New Products</h2>
+                        <h2 className='fw-bold'>All Products</h2>
                     </div>
                 </div>
             </div>

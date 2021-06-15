@@ -119,3 +119,11 @@
         border-radius: 4px;
     }
 }
+
+.filter-sizes-container {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+    max-width: 100%;
+}
