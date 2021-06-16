@@ -1,10 +1,11 @@
 import React from 'react'
 import styled from 'styled-components'
 import Link from 'next/link'
+import { motion } from 'framer-motion'
 
 import { User, ShoppingCart, Search } from 'react-feather'
 
-const TopbarStyle = styled.nav`
+const TopbarStyle = styled(motion.nav)`
     background-color: white;
     position: sticky;
     top: 0;
@@ -37,7 +38,10 @@ const TopbarSearch = styled.input`
 
 export default function Topbar() {
     return (
-        <TopbarStyle>
+        <TopbarStyle
+            initial={{ opacity: 0, y: -40 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.4 }}>
             <div className='container'>
                 <TopbarMenus>
                     <div className='d-flex align-items-center justify-content-start'>
@@ -51,12 +55,12 @@ export default function Topbar() {
                             <a className='text-dark'>Men</a>
                         </Link>
                     </div>
-                    <div className='d-flex align-items-center justify-content-start'>
+                    <div className='d-lg-flex align-items-center justify-content-start d-none'>
                         <Search size={24} color='#474747' className='me-2' />
                         <TopbarSearch placeholder='Search Sneakers...' />
                     </div>
                     <div className='d-flex align-items-center justify-content-end'>
-                        <button className='btn'>
+                        <button className='btn d-none d-lg-flex'>
                             <User className='me-2' size={24} />
                             SignUp/Login
                         </button>

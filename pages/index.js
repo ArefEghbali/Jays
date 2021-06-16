@@ -2,12 +2,25 @@ import Head from 'next/head'
 import Image from 'next/image'
 import Link from 'next/link'
 import Topbar from '../Components/Topbar/Topbar'
-
+import { motion } from 'framer-motion'
+import prismaclient from '../utils/prismaclient'
 import { Plus, Minus, ArrowRight } from 'react-feather'
 
 import FilterBar from '../Components/FilterBar/FilterBar'
+import Footer from '../Components/Footer/Footer'
+import SingleProduct from '../Components/Product/SingleProduct'
 
-export default function Home() {
+export async function getServerSideProps({ req, res }) {
+    let products = await prismaclient.product.findMany()
+
+    return {
+        props: {
+            products: JSON.parse(JSON.stringify(products)),
+        },
+    }
+}
+
+export default function Home({ products }) {
     return (
         <div>
             <Head>
@@ -24,14 +37,21 @@ export default function Home() {
                 />
             </Head>
             <Topbar />
-            <div className='hero'>
+            <motion.div
+                className='hero'
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.65 }}>
                 <div className='container'>
                     <div className='row'>
                         <div className='col-12 col-lg-6'>
                             <div className='description'>
-                                <h1>
+                                <motion.h1
+                                    initial={{ opacity: 0, x: -50 }}
+                                    animate={{ opacity: 1, x: 0 }}
+                                    transition={{ delay: 0.8 }}>
                                     Feel light as a <br /> Feather.
-                                </h1>
+                                </motion.h1>
                                 <h3 className='my-3'>Adidas White Sneaker</h3>
                                 <h4 className='fw-bold'>$45</h4>
                                 <div className='d-flex align-items-center justify-content-start mt-3'>
@@ -51,7 +71,11 @@ export default function Home() {
                             </div>
                         </div>
                         <div className='col-12 col-md-6'>
-                            <div className='photo-section'>
+                            <motion.div
+                                className='photo-section'
+                                initial={{ opacity: 0, scale: 0.7 }}
+                                animate={{ opacity: 1, scale: 1 }}
+                                transition={{ delay: 1, duration: 0.6 }}>
                                 <Image
                                     src='/static/images/Addidas.png'
                                     alt='Addidas Sneaker'
@@ -60,15 +84,15 @@ export default function Home() {
                                 />
                                 <div className='circle first'></div>
                                 <div className='circle second'></div>
-                            </div>
+                            </motion.div>
                         </div>
                     </div>
                 </div>
-            </div>
-            <h2 className='fw-bold text-center mt-5 mb-3'>
-                Sneakers for Everyone
-            </h2>
+            </motion.div>
             <div className='container'>
+                <h2 className='fw-bold text-left collections-title'>
+                    Sneakers for Everyone
+                </h2>
                 <div className='row'>
                     <div className='col-12 col-lg-6'>
                         <div className='collection'>
@@ -107,15 +131,26 @@ export default function Home() {
                         </div>
                     </div>
                 </div>
-                <div className='row mt-5'>
+                <div className='row products-section'>
                     <div className='col-3 d-none d-lg-flex'>
                         <FilterBar />
                     </div>
                     <div className='col-12 col-lg-9'>
-                        <h2 className='fw-bold'>All Products</h2>
+                        <h2 className='fw-bold mb-3'>All Products</h2>
+                        <div className='products-grid'>
+                            {products.length
+                                ? products.map((product) => (
+                                      <SingleProduct
+                                          product={product}
+                                          key={product.id}
+                                      />
+                                  ))
+                                : null}
+                        </div>
                     </div>
                 </div>
             </div>
+            <Footer />
         </div>
     )
 }
