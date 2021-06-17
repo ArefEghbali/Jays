@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import Head from 'next/head'
 import Image from 'next/image'
 import Link from 'next/link'
@@ -12,17 +13,49 @@ import SingleProduct from '../Components/Product/SingleProduct'
 
 export async function getServerSideProps({ req, res }) {
     let products = await prismaclient.product.findMany()
+    let brands = await prismaclient.brand.findMany()
 
     return {
         props: {
             products: JSON.parse(JSON.stringify(products)),
+            brands: JSON.parse(JSON.stringify(brands)),
         },
     }
 }
 
-export default function Home({ products }) {
+export default function Home({ products, brands }) {
+    const [allProducts, setAllProducts] = useState(products)
+
+    const filterOnBrand = (brand) => {
+        setAllProducts((prev) => {
+            let newList = prev.filter((prevItem) => prevItem.bid === brand)
+
+            return newList
+        })
+    }
+
+    const filterByCollection = (collection) => {
+        setAllProducts((prev) => {
+            let newList = prev.filter(
+                (prevItem) => prevItem.category === collection
+            )
+
+            return newList
+        })
+    }
+
+    const filterBySize = (size) => {
+        setAllProducts((prev) => {
+            let newList = prev.filter((prevItem) =>
+                prevItem.sizes.includes(size.toString())
+            )
+
+            return newList
+        })
+    }
+
     return (
-        <div>
+        <motion.div exit={{ opacity: 0 }}>
             <Head>
                 <title>Jays. | Best Sneakers for everyone</title>
                 <meta
@@ -133,13 +166,18 @@ export default function Home({ products }) {
                 </div>
                 <div className='row products-section'>
                     <div className='col-3 d-none d-lg-flex'>
-                        <FilterBar />
+                        <FilterBar
+                            brands={brands}
+                            filterBrand={filterOnBrand}
+                            filterCollection={filterByCollection}
+                            filterSize={filterBySize}
+                        />
                     </div>
                     <div className='col-12 col-lg-9'>
                         <h2 className='fw-bold mb-3'>All Products</h2>
                         <div className='products-grid'>
-                            {products.length
-                                ? products.map((product) => (
+                            {allProducts.length
+                                ? allProducts.map((product) => (
                                       <SingleProduct
                                           product={product}
                                           key={product.id}
@@ -151,6 +189,6 @@ export default function Home({ products }) {
                 </div>
             </div>
             <Footer />
-        </div>
+        </motion.div>
     )
 }

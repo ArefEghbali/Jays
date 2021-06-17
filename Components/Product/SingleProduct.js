@@ -1,6 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
 import Image from 'next/image'
+import Link from 'next/link'
 
 import { ShoppingCart } from 'react-feather'
 
@@ -24,15 +25,20 @@ export default function SingleProduct({ product }) {
     return (
         <div className='w-100 mt-3'>
             <ProductImage>
-                <Image
-                    src={product.image.toString()}
-                    alt={product.title}
-                    width={250}
-                    height={200}
-                />
+                <Link
+                    href={{ pathname: '/product', query: { pid: product.id } }}>
+                    <a>
+                        <Image
+                            src={product.image.toString()}
+                            alt={product.title}
+                            width={250}
+                            height={200}
+                        />
+                    </a>
+                </Link>
             </ProductImage>
             <p className='mt-2'>{product.title}</p>
-            <button className='btn btn-primary mt-2 py-2 w-100'>
+            <button className='btn btn-outline-dark mt-2 py-2 w-100'>
                 <div className='d-flex align-items-center justify-content-between'>
                     <span>
                         <ShoppingCart size={24} className='me-2' />

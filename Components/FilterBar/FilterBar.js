@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import styled from 'styled-components'
 
 const FilterStyle = styled.aside`
@@ -10,6 +10,7 @@ const FilterStyle = styled.aside`
     align-items: stretch;
     justify-content: start;
     width: 100%;
+    height: max-content;
 `
 
 const FilterOption = styled.label`
@@ -44,19 +45,40 @@ const FilterSize = styled.span`
     }
 `
 
-export default function FilterBar() {
+export default function FilterBar({
+    brands,
+    filterBrand,
+    filterCollection,
+    filterSize,
+}) {
+    const [brandFiltered, setBrandFiltered] = useState({
+        nike: false,
+        puma: false,
+        adidas: false,
+        converse: false,
+    })
+
     const sizes = [
         40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55,
     ]
 
+    const handleBrandSelection = (brand, title) => {
+        let lowBrand = title.toLowerCase()
+        setBrandFiltered((prev) => ({
+            ...prev,
+            [lowBrand]: true,
+        }))
+        filterBrand(brand)
+    }
+
     return (
         <FilterStyle>
             <h4 className='fw-bold mb-3'>Collections</h4>
-            <FilterOption>
+            <FilterOption onClick={() => filterCollection('Men')}>
                 Men
                 <input type='checkbox' />
             </FilterOption>
-            <FilterOption>
+            <FilterOption onClick={() => filterCollection('Women')}>
                 Women
                 <input type='checkbox' />
             </FilterOption>
@@ -64,18 +86,31 @@ export default function FilterBar() {
             <h4 className='fw-bold mb-3'>Sizes</h4>
             <div className='filter-sizes-container'>
                 {sizes.map((size) => (
-                    <FilterSize key={size}>{size}</FilterSize>
+                    <FilterSize key={size} onClick={() => filterSize(size)}>
+                        {size}
+                    </FilterSize>
                 ))}
             </div>
             <hr />
-            <h4 className='fw-bold mb-3'>Brands</h4>
+            <h4 className='fw-bold'>Brands</h4>
             <div className='filter-sizes-container'>
-                <button className='btn btn-outline-dark me-3'>Adidas</button>
-                <button className='btn btn-outline-dark me-3'>Puma</button>
-                <button className='btn btn-outline-dark me-3'>Nike</button>
-                <button className='btn btn-outline-dark me-3 mt-3'>
-                    Converse
-                </button>
+                {brands.length
+                    ? brands.map((brand) => (
+                          <button
+                              className={
+                                  brandFiltered[brand.title.toLowerCase()] ===
+                                  true
+                                      ? `btn btn-dark me-3 mt-3`
+                                      : 'btn btn-outline-dark me-3 mt-3'
+                              }
+                              key={brand.id}
+                              onClick={() =>
+                                  handleBrandSelection(brand.id, brand.title)
+                              }>
+                              {brand.title}
+                          </button>
+                      ))
+                    : null}
             </div>
         </FilterStyle>
     )
