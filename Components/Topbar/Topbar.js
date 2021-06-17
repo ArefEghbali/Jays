@@ -1,9 +1,12 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import styled from 'styled-components'
 import Link from 'next/link'
 import { motion } from 'framer-motion'
 
-import { User, ShoppingCart, Search } from 'react-feather'
+import Cart from './Cart'
+import appContext from '../../context/appContext'
+
+import { User, ShoppingCart, Search, Plus, Minus, Trash } from 'react-feather'
 
 const TopbarStyle = styled(motion.nav)`
     background-color: white;
@@ -37,6 +40,8 @@ const TopbarSearch = styled.input`
 `
 
 export default function Topbar() {
+    const globalContext = useContext(appContext)
+
     return (
         <TopbarStyle
             initial={{ opacity: 0, y: -40 }}
@@ -64,9 +69,7 @@ export default function Topbar() {
                             <User className='me-2' size={24} />
                             SignUp/Login
                         </button>
-                        <button className='btn ms-4'>
-                            <ShoppingCart size={24} />
-                        </button>
+                        <Cart globalContext={globalContext} />
                     </div>
                 </TopbarMenus>
             </div>

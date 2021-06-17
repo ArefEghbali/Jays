@@ -1,7 +1,10 @@
-import React from 'react'
+import React, { useContext, useState } from 'react'
 import styled from 'styled-components'
 import Image from 'next/image'
 import Link from 'next/link'
+import { Popover } from '@headlessui/react'
+
+import appContext from '../../context/appContext'
 
 import { ShoppingCart } from 'react-feather'
 
@@ -22,6 +25,20 @@ const ProductImage = styled.div`
 `
 
 export default function SingleProduct({ product }) {
+    const [selectedSize, setSelectedSize] = useState(product.sizes[0])
+
+    const globalContext = useContext(appContext)
+
+    const handleAddingItem = (item) => {
+        let finalItem = {
+            ...item,
+            quantity: 1,
+            size: selectedSize,
+        }
+
+        globalContext.addToCart(finalItem)
+    }
+
     return (
         <div className='w-100 mt-3'>
             <ProductImage>
@@ -33,20 +50,45 @@ export default function SingleProduct({ product }) {
                             alt={product.title}
                             width={250}
                             height={200}
+                            loading='lazy'
                         />
                     </a>
                 </Link>
             </ProductImage>
             <p className='mt-2'>{product.title}</p>
-            <button className='btn btn-outline-dark mt-2 py-2 w-100'>
-                <div className='d-flex align-items-center justify-content-between'>
-                    <span>
-                        <ShoppingCart size={24} className='me-2' />
+            <Popover className='position-relative'>
+                <Popover.Button className='btn btn-outline-dark mt-2 py-3 w-100'>
+                    <div className='d-flex align-items-center justify-content-between'>
+                        <span>
+                            <ShoppingCart size={24} className='me-2' />
+                            Add To Cart
+                        </span>
+                        <b>${product.price}</b>
+                    </div>
+                </Popover.Button>
+                <Popover.Panel className='product-popover-panel'>
+                    <h4>Select Size</h4>
+                    <div className='d-flex align-items-center justify-content-start'>
+                        {product.sizes.map((size) => (
+                            <span
+                                className={`${
+                                    size === selectedSize
+                                        ? 'btn btn-dark'
+                                        : 'btn btn-outline-dark'
+                                } me-2 mt-3 clickable`}
+                                key={size}
+                                onClick={() => setSelectedSize(size)}>
+                                {size}
+                            </span>
+                        ))}
+                    </div>
+                    <button
+                        className='btn btn-primary mt-4'
+                        onClick={() => handleAddingItem(product)}>
                         Add To Cart
-                    </span>
-                    <b>${product.price}</b>
-                </div>
-            </button>
+                    </button>
+                </Popover.Panel>
+            </Popover>
         </div>
     )
 }

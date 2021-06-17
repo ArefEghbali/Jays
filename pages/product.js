@@ -79,7 +79,7 @@ export default function product({ product }) {
                             {product.sizes.map((size) => (
                                 <span
                                     key={size}
-                                    className='btn btn-outline-dark me-3 mt-3'>
+                                    className='btn btn-outline-dark me-3 mt-3 clickable'>
                                     {size}
                                 </span>
                             ))}

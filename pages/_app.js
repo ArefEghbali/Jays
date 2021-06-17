@@ -1,11 +1,14 @@
 import '../styles/index.scss'
 import { AnimatePresence } from 'framer-motion'
+import { Provider } from '../context/appContext'
 
 function MyApp({ Component, pageProps }) {
     return (
-        <AnimatePresence>
-            <Component {...pageProps} />
-        </AnimatePresence>
+        <Provider>
+            <AnimatePresence>
+                <Component {...pageProps} />
+            </AnimatePresence>
+        </Provider>
     )
 }
 
