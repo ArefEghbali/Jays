@@ -1,12 +1,14 @@
-import React, { useContext } from 'react'
+import React, { useContext, useState } from 'react'
 import styled from 'styled-components'
 import Link from 'next/link'
 import { motion } from 'framer-motion'
 
+import Auth from '../Auth/Auth'
+
 import Cart from './Cart'
 import appContext from '../../context/appContext'
 
-import { User, ShoppingCart, Search, Plus, Minus, Trash } from 'react-feather'
+import { User, Search } from 'react-feather'
 
 const TopbarStyle = styled(motion.nav)`
     background-color: white;
@@ -16,7 +18,7 @@ const TopbarStyle = styled(motion.nav)`
     display: flex;
     align-items: center;
     box-shadow: 0px 2px 5px 0px rgba(33, 33, 33, 0.15);
-    z-index: 9998;
+    z-index: 9990;
 `
 
 const TopbarMenus = styled.div`
@@ -41,6 +43,7 @@ const TopbarSearch = styled.input`
 
 export default function Topbar() {
     const globalContext = useContext(appContext)
+    const [isAuthOpen, setIsAuthOpen] = useState(false)
 
     return (
         <TopbarStyle
@@ -65,7 +68,9 @@ export default function Topbar() {
                         <TopbarSearch placeholder='Search Sneakers...' />
                     </div>
                     <div className='d-flex align-items-center justify-content-end'>
-                        <button className='btn d-none d-lg-flex'>
+                        <button
+                            className='btn d-none d-lg-flex'
+                            onClick={() => setIsAuthOpen(true)}>
                             <User className='me-2' size={24} />
                             SignUp/Login
                         </button>
@@ -73,6 +78,7 @@ export default function Topbar() {
                     </div>
                 </TopbarMenus>
             </div>
+            <Auth isOpen={isAuthOpen} close={setIsAuthOpen} />
         </TopbarStyle>
     )
 }
