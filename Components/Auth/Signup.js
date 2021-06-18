@@ -1,11 +1,15 @@
-import React from 'react'
+import React, { useState } from 'react'
 import FormInput from '../FormInput/FormInput'
 import { useFormik } from 'formik'
+import axios from 'axios'
+import Router from 'next/router'
 
 import isAlpha from 'validator/lib/isAlpha'
 import isEmail from 'validator/lib/isEmail'
 
 export default function Signup() {
+    const [error, setError] = useState('')
+
     const formik = useFormik({
         initialValues: {
             fullname: '',
@@ -34,13 +38,27 @@ export default function Signup() {
             return errors
         },
         onSubmit: (values) => {
-            console.log(values)
+            axios
+                .post('http://localhost:3000/api/auth/signup', {
+                    fullname: values.fullname,
+                    email: values.email,
+                    password: values.password,
+                })
+                .then((response) => {
+                    if (response.data.status === 200) {
+                        window.location.reload()
+                    } else {
+                        setError(response.data.message)
+                    }
+                })
+                .catch((err) => console.log(err))
         },
         validateOnChange: false,
     })
 
     return (
         <form name='signup-form' onSubmit={formik.handleSubmit}>
+            <p className='text-danger text-center'>{error}</p>
             <div className='mt-4'>
                 {formik.errors.fullname ? (
                     <label className='text-danger'>
