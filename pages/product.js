@@ -1,9 +1,11 @@
-import React from 'react'
+import React, { useContext, useState } from 'react'
 import Head from 'next/head'
 import prismaclient from '../utils/prismaclient'
 import Image from 'next/image'
 import Link from 'next/link'
 import { motion } from 'framer-motion'
+
+import appContext from '../context/appContext'
 
 import { Plus, Minus, ShoppingCart, Heart } from 'react-feather'
 
@@ -27,6 +29,35 @@ export async function getServerSideProps({ query }) {
 }
 
 export default function product({ product }) {
+    const [quantity, setQuantity] = useState(1)
+    const [selectedSize, setSelectedSize] = useState(product.sizes[0])
+
+    const globalContext = useContext(appContext)
+
+    const handleAddToCart = () => {
+        let finalItem = {
+            ...product,
+            quantity: quantity,
+            size: selectedSize,
+        }
+
+        globalContext.addToCart(finalItem)
+    }
+
+    const handleUpdateQuantity = (action) => {
+        if (action === 'add') {
+            setQuantity((prev) => (prev += 1))
+        } else if (action === 'subs') {
+            setQuantity((prev) => {
+                if (prev - 1 > 0) {
+                    return (prev -= 1)
+                }
+
+                return prev
+            })
+        }
+    }
+
     return (
         <motion.div className='single-product-page' exit={{ opacity: 0 }}>
             <Head>
@@ -65,11 +96,17 @@ export default function product({ product }) {
                         <p>{product.description}</p>
                         <div className='d-flex align-items-center justify-content-between w-50 mt-5 mb-4'>
                             <div className='d-flex align-items-center justify-content-between'>
-                                <button className='btn'>
+                                <button
+                                    className='btn'
+                                    onClick={() =>
+                                        handleUpdateQuantity('subs')
+                                    }>
                                     <Minus size={24} />
                                 </button>
-                                <b className='px-4'>1</b>
-                                <button className='btn btn-secondary'>
+                                <b className='px-4'>{quantity}</b>
+                                <button
+                                    className='btn btn-secondary'
+                                    onClick={() => handleUpdateQuantity('add')}>
                                     <Plus size={24} />
                                 </button>
                             </div>
@@ -79,14 +116,23 @@ export default function product({ product }) {
                             {product.sizes.map((size) => (
                                 <span
                                     key={size}
-                                    className='btn btn-outline-dark me-3 mt-3 clickable'>
+                                    className={`me-3 mt-3 clickable ${
+                                        selectedSize === size
+                                            ? 'btn btn-dark'
+                                            : 'btn btn-outline-dark'
+                                    }`}
+                                    onClick={() => setSelectedSize(size)}>
                                     {size}
                                 </span>
                             ))}
                         </div>
                         <p className='text-muted'>Total Price</p>
-                        <h3 className='fw-bold mb-4'>${product.price}</h3>
-                        <button className='btn btn-lg btn-primary'>
+                        <h3 className='fw-bold mb-4'>
+                            ${product.price * quantity}
+                        </h3>
+                        <button
+                            className='btn btn-lg btn-primary'
+                            onClick={() => handleAddToCart()}>
                             <ShoppingCart size={24} className='me-3' />
                             Add To Cart
                         </button>

@@ -6,24 +6,50 @@ import Topbar from '../Components/Topbar/Topbar'
 import { motion } from 'framer-motion'
 import prismaclient from '../utils/prismaclient'
 import { Plus, Minus, ArrowRight } from 'react-feather'
+import axios from 'axios'
 
 import FilterBar from '../Components/FilterBar/FilterBar'
 import Footer from '../Components/Footer/Footer'
 import SingleProduct from '../Components/Product/SingleProduct'
 
 export async function getServerSideProps({ req, res }) {
-    let products = await prismaclient.product.findMany()
-    let brands = await prismaclient.brand.findMany()
+    if (typeof window === 'undefined') {
+        let products = await prismaclient.product.findMany()
+        let brands = await prismaclient.brand.findMany()
 
-    return {
-        props: {
-            products: JSON.parse(JSON.stringify(products)),
-            brands: JSON.parse(JSON.stringify(brands)),
-        },
+        let token = req.cookies.token || ''
+
+        if (token !== '') {
+            let response = await axios.get(
+                'http://localhost:3000/api/auth/verify',
+                {
+                    headers: {
+                        authorization: token,
+                    },
+                }
+            )
+
+            if (response.data.status === 200) {
+                return {
+                    props: {
+                        products: JSON.parse(JSON.stringify(products)),
+                        brands: JSON.parse(JSON.stringify(brands)),
+                        user: response.data.data,
+                    },
+                }
+            }
+        }
+
+        return {
+            props: {
+                products: JSON.parse(JSON.stringify(products)),
+                brands: JSON.parse(JSON.stringify(brands)),
+            },
+        }
     }
 }
 
-export default function Home({ products, brands }) {
+export default function Home({ products, brands, user }) {
     const [allProducts, setAllProducts] = useState(products)
 
     const filterOnBrand = (brand) => {
@@ -69,7 +95,7 @@ export default function Home({ products, brands }) {
                     rel='stylesheet'
                 />
             </Head>
-            <Topbar />
+            <Topbar user={user || {}} />
             <motion.div
                 className='hero'
                 initial={{ opacity: 0 }}

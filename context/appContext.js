@@ -20,7 +20,7 @@ export const Provider = ({ children }) => {
                 let updatedItem = prev.cart
                 updatedItem[dupItem].quantity += 1
 
-                updateCartQuantityDB(item.id, item.quantity, 'add')
+                updateCartQuantityDB(item.id, updatedItem[dupItem].quantity)
 
                 return {
                     ...prev,
@@ -48,17 +48,17 @@ export const Provider = ({ children }) => {
                 if (action === 'add') {
                     updateCartQuantityDB(
                         currentCart[currentItem].id,
-                        currentCart[currentItem].quantity,
-                        'add'
+                        currentCart[currentItem].quantity + 1
                     )
                     currentCart[currentItem].quantity += 1
                 } else if (action === 'subs') {
-                    updateCartQuantityDB(
-                        currentCart[currentItem].id,
-                        currentCart[currentItem].quantity,
-                        'subs'
-                    )
-                    currentCart[currentItem].quantity -= 1
+                    if (currentCart[currentItem].quantity - 1 > 0) {
+                        updateCartQuantityDB(
+                            currentCart[currentItem].id,
+                            currentCart[currentItem].quantity - 1
+                        )
+                        currentCart[currentItem].quantity -= 1
+                    }
                 }
             }
 

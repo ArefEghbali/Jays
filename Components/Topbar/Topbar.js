@@ -3,12 +3,14 @@ import styled from 'styled-components'
 import Link from 'next/link'
 import { motion } from 'framer-motion'
 
+import { Menu } from '@headlessui/react'
+
 import Auth from '../Auth/Auth'
 
 import Cart from './Cart'
 import appContext from '../../context/appContext'
 
-import { User, Search } from 'react-feather'
+import { User, Search, ChevronDown } from 'react-feather'
 
 const TopbarStyle = styled(motion.nav)`
     background-color: white;
@@ -41,7 +43,7 @@ const TopbarSearch = styled.input`
     width: 500px;
 `
 
-export default function Topbar() {
+export default function Topbar({ user }) {
     const globalContext = useContext(appContext)
     const [isAuthOpen, setIsAuthOpen] = useState(false)
 
@@ -68,12 +70,34 @@ export default function Topbar() {
                         <TopbarSearch placeholder='Search Sneakers...' />
                     </div>
                     <div className='d-flex align-items-center justify-content-end'>
-                        <button
-                            className='btn d-none d-lg-flex'
-                            onClick={() => setIsAuthOpen(true)}>
-                            <User className='me-2' size={24} />
-                            SignUp/Login
-                        </button>
+                        {user && user.hasOwnProperty('fullname') ? (
+                            <Menu as='div' className='position-relative'>
+                                <Menu.Button className='btn d-flex align-items-center'>
+                                    <User className='me-2' size={24} />
+                                    {user.fullname}
+                                    <ChevronDown size={24} className='ms-2' />
+                                </Menu.Button>
+                                <Menu.Items className='topbar-user-profile'>
+                                    <Menu.Item
+                                        as='button'
+                                        className='btn d-block mt-2 w-100 text-start'>
+                                        Profile
+                                    </Menu.Item>
+                                    <Menu.Item
+                                        as='button'
+                                        className='btn d-block mt-2 w-100 text-start'>
+                                        Sign Out
+                                    </Menu.Item>
+                                </Menu.Items>
+                            </Menu>
+                        ) : (
+                            <button
+                                className='btn d-none d-lg-flex'
+                                onClick={() => setIsAuthOpen(true)}>
+                                <User className='me-2' size={24} />
+                                SignUp/Login
+                            </button>
+                        )}
                         <Cart globalContext={globalContext} />
                     </div>
                 </TopbarMenus>

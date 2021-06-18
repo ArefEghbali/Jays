@@ -34,20 +34,11 @@ export const removeCartDB = (id) => {
         .catch((err) => console.log(err))
 }
 
-export const updateCartQuantityDB = (id, quantity, action) => {
-    if (action === 'add') {
-        db.table('cart')
-            .update(id, { quantity: (quantity += 1) })
-            .then(() => {
-                return
-            })
-            .catch((err) => console.log(err))
-    } else if (action === 'subs') {
-        db.table('cart')
-            .update(id, { quantity: (quantity -= 1) })
-            .then(() => {
-                return
-            })
-            .catch((err) => console.log(err))
-    }
+export const updateCartQuantityDB = (id, quantity) => {
+    db.table('cart')
+        .update(id, { quantity: quantity })
+        .then(() => {
+            return
+        })
+        .catch((err) => console.log(err))
 }
