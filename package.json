@@ -6,7 +6,7 @@
         "dev": "next dev",
         "build": "next build",
         "start": "next start -p $PORT",
-        "heroku-postbuild": "prisma introspect && prisma generate"
+        "heroku-postbuild": "prisma generate"
     },
     "dependencies": {
         "@headlessui/react": "^1.2.0",
