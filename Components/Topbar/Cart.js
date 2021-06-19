@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import styled from 'styled-components'
+import Router from 'next/router'
 
 import calcTotalPrice from '../../utils/calcTotalPrice'
 
@@ -91,7 +92,9 @@ export default function Cart({ globalContext }) {
                                 ${calcTotalPrice(cartItems)}
                             </h4>
                         </div>
-                        <button className='btn btn-primary mt-4 py-2'>
+                        <button
+                            className='btn btn-primary mt-4 py-2'
+                            onClick={() => Router.push('/checkout')}>
                             Checkout
                         </button>
                     </>
