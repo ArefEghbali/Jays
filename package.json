@@ -5,8 +5,7 @@
     "scripts": {
         "dev": "next dev",
         "build": "next build",
-        "start": "next start -p $PORT",
-        "heroku-postbuild": "prisma migrate dev"
+        "start": "next start -p $PORT"
     },
     "dependencies": {
         "@headlessui/react": "^1.2.0",
