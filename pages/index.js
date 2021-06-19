@@ -21,7 +21,7 @@ export async function getServerSideProps({ req, res }) {
 
         if (token !== '') {
             let response = await axios.get(
-                'http://localhost:3000/api/auth/verify',
+                `${process.env.BASE_API_URL}auth/verify`,
                 {
                     headers: {
                         authorization: token,

@@ -30,7 +30,7 @@ export default function Login() {
         },
         onSubmit: (values) => {
             axios
-                .post('http://localhost:3000/api/auth/login', {
+                .post(`${process.env.BASE_API_URL}auth/login`, {
                     email: values.email,
                     password: values.password,
                 })

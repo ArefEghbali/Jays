@@ -39,7 +39,7 @@ export default function Signup() {
         },
         onSubmit: (values) => {
             axios
-                .post('http://localhost:3000/api/auth/signup', {
+                .post(`${process.env.BASE_API_URL}auth/signup`, {
                     fullname: values.fullname,
                     email: values.email,
                     password: values.password,
