@@ -56,4 +56,6 @@ model Order {
   product   Product[]
   orderedAt DateTime  @default(now())
   status    String
+  address   String
+  total     Decimal
 }

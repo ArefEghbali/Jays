@@ -20,7 +20,9 @@ export default function OnGoingOrder({ orders, title, defaultOpen }) {
             </Disclosure.Button>
             <Disclosure.Panel className='text-gray-500'>
                 {orders.length ? (
-                    orders.map((order) => <ProfileOrder order={order} />)
+                    orders.map((order) => (
+                        <ProfileOrder order={order} key={order.id} />
+                    ))
                 ) : (
                     <div className='d-flex align-items-center justify-content-center flex-column'>
                         <h4 className='text-muted'>

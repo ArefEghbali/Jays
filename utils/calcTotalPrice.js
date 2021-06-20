@@ -1,5 +1,6 @@
 export default function calcTotalPrice(items) {
     return items.reduce((sum, i) => {
-        return sum + i.price * i.quantity
+        console.log(typeof i.quantity)
+        return sum + parseFloat(i.price) * parseFloat(i.quantity)
     }, 0)
 }

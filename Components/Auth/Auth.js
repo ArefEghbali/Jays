@@ -1,6 +1,5 @@
 import React, { useState } from 'react'
 import styled from 'styled-components'
-import { Dialog } from '@headlessui/react'
 import { AnimatePresence, motion } from 'framer-motion'
 
 import Login from './Login'
@@ -25,11 +24,8 @@ export default function Auth({ isOpen, close }) {
     const [currentTab, setCurrentTab] = useState('login')
 
     return (
-        <Dialog
-            open={isOpen}
-            onClose={() => close(false)}
-            className='auth-modal'>
-            <Dialog.Overlay className='overlay' />
+        <div className={`${isOpen ? 'show' : ''} auth-modal`}>
+            <div className='overlay' />
 
             <AnimatePresence>
                 {isOpen && (
@@ -72,6 +68,6 @@ export default function Auth({ isOpen, close }) {
                     </motion.div>
                 )}
             </AnimatePresence>
-        </Dialog>
+        </div>
     )
 }

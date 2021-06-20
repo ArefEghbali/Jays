@@ -1,9 +1,10 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import axios from 'axios'
 import Head from 'next/head'
 import Topbar from '../Components/Topbar/Topbar'
 import Footer from '../Components/Footer/Footer'
 import styled from 'styled-components'
+import prismaclient from '../utils/prismaclient'
 
 import UserOrders from '../Components/Orders/UserOrders'
 
@@ -28,47 +29,56 @@ const ProfileTabs = styled.div`
 `
 
 export async function getServerSideProps({ req, res }) {
-    // let token = req.cookies.token || ''
+    let token = req.cookies.token || ''
 
-    // if (token !== '') {
-    //     let response = await axios.get(
-    //         `${process.env.BASE_API_URL}auth/verify`,
-    //         {
-    //             headers: {
-    //                 authorization: token,
-    //             },
-    //         }
-    //     )
+    if (token !== '') {
+        let response = await axios.get(
+            `${process.env.BASE_API_URL}auth/verify`,
+            {
+                headers: {
+                    authorization: token,
+                },
+            }
+        )
 
-    //     if (response.data.status === 200) {
-    //         return {
-    //             props: {
-    //                 user: response.data.data,
-    //             },
-    //         }
-    //     }
-    // }
+        if (response.data.status === 200) {
+            let orders = await prismaclient.order.findMany({
+                where: {
+                    uid: response.data.data.pid,
+                },
+                select: {
+                    address: true,
+                    id: true,
+                    orderedAt: true,
+                    status: true,
+                    product: true,
+                    total: true,
+                },
+            })
 
-    // return {
-    //     redirect: {
-    //         destination: '/',
-    //         permanent: false,
-    //     },
-    // }
+            let ongoing = orders.filter(
+                (prevOrder) => prevOrder.status === 'OnGoing'
+            )
+
+            return {
+                props: {
+                    user: response.data.data,
+                    ongoing: JSON.parse(JSON.stringify(ongoing)),
+                },
+            }
+        }
+    }
 
     return {
-        props: {
-            user: {
-                fullname: 'Aref Eghbali',
-                uid: '1234',
-            },
+        redirect: {
+            destination: '/',
+            permanent: false,
         },
     }
 }
 
-export default function profile({ user }) {
+export default function profile({ user, ongoing }) {
     const [activeTab, setActiveTab] = useState('order')
-
     return (
         <div>
             <Head>
@@ -93,7 +103,7 @@ export default function profile({ user }) {
                     </button>
                     <button className='btn'>Log Out</button>
                 </ProfileTabs>
-                <UserOrders orders={[]} title='OnGoing' defaultOpen />
+                <UserOrders orders={ongoing} title='OnGoing' defaultOpen />
                 <UserOrders orders={[]} title='Completed' />
                 <UserOrders orders={[]} title='Cancelled' />
             </div>

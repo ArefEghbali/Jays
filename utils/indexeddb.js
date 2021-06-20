@@ -42,3 +42,7 @@ export const updateCartQuantityDB = (id, quantity) => {
         })
         .catch((err) => console.log(err))
 }
+
+export const clearCartDB = async () => {
+    await db.table('cart').clear()
+}

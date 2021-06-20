@@ -2,13 +2,16 @@ import React, { useContext, useEffect, useState } from 'react'
 import Head from 'next/head'
 import axios from 'axios'
 import Link from 'next/link'
+import Router from 'next/router'
+
+import isAlpha from 'validator/lib/isAlpha'
+import isAlphanumeric from 'validator/lib/isAlphanumeric'
 
 import { RadioGroup } from '@headlessui/react'
 
 import calcTotalPrice from '../utils/calcTotalPrice'
 import appContext from '../context/appContext'
 
-import Modal from '../Components/Modal/Modal'
 import SingleOrder from '../Components/Product/SingleOrder'
 import FormInput from '../Components/FormInput/FormInput'
 import Footer from '../Components/Footer/Footer'
@@ -58,9 +61,66 @@ export default function checkout({ user }) {
             state: '',
             address: '',
         },
-        onSubmit: (values) => {
-            console.log(values)
+        validate: (values) => {
+            let errors = {}
+
+            if (!values.email) {
+                errors.email = 'Please enter your email'
+            }
+
+            if (!values.fullname) {
+                errors.fullname = 'Please enter your email'
+            } else if (!isAlpha(values.fullname, 'en-US', { ignore: ' ' })) {
+                errors.fullname = 'Invalid Full Name'
+            }
+
+            if (!values.city) {
+                errors.city = 'Please enter your email'
+            } else if (!isAlpha(values.city, 'en-US', { ignore: ' ' })) {
+                errors.city = 'Invalid city name'
+            }
+
+            if (!values.state) {
+                errors.state = 'Please enter your email'
+            } else if (!isAlpha(values.state, 'en-US', { ignore: ' ' })) {
+                errors.state = 'Invalid state name'
+            }
+
+            if (!values.address) {
+                errors.address = 'Please enter your email'
+            } else if (
+                !isAlphanumeric(values.address, 'en-US', { ignore: ' #-' })
+            ) {
+                errors.state = 'Invalid address'
+            }
+
+            return errors
         },
+        onSubmit: (values) => {
+            let address = `${values.state}, ${values.city}, ${values.address}`
+            let orders = []
+
+            globalContext.cart.forEach((item) => {
+                orders.push(item.id)
+            })
+
+            axios
+                .post(`${process.env.BASE_API_URL}orders/newOrder`, {
+                    uid: user.pid,
+                    products: orders,
+                    address: address,
+                    status: 'OnGoing',
+                    total: calcTotalPrice(globalContext.cart),
+                })
+                .then((response) => {
+                    if (response.data.status === 200) {
+                        globalContext.clearCart()
+                        Router.replace('/profile')
+                    }
+                })
+                .catch((err) => console.log(err))
+        },
+        validateOnChange: false,
     })
 
     useEffect(() => {
@@ -107,6 +167,7 @@ export default function checkout({ user }) {
                                     onChange={formik.handleChange}
                                     placeholder='your email address'
                                     autoComplete='new password'
+                                    error={formik.errors.email ? true : false}
                                 />
                             </div>
                             <div className='mt-4'>
@@ -117,6 +178,9 @@ export default function checkout({ user }) {
                                     onChange={formik.handleChange}
                                     placeholder='The person recieving this order'
                                     autoComplete='username'
+                                    error={
+                                        formik.errors.fullname ? true : false
+                                    }
                                 />
                             </div>
                             <div className='row'>
@@ -128,6 +192,11 @@ export default function checkout({ user }) {
                                             value={formik.values.state}
                                             onChange={formik.handleChange}
                                             placeholder='e.g New York'
+                                            error={
+                                                formik.errors.state
+                                                    ? true
+                                                    : false
+                                            }
                                         />
                                     </div>
                                 </div>
@@ -139,6 +208,11 @@ export default function checkout({ user }) {
                                             value={formik.values.city}
                                             onChange={formik.handleChange}
                                             placeholder='e.g New York'
+                                            error={
+                                                formik.errors.city
+                                                    ? true
+                                                    : false
+                                            }
                                         />
                                     </div>
                                 </div>
@@ -150,6 +224,7 @@ export default function checkout({ user }) {
                                     value={formik.values.address}
                                     onChange={formik.handleChange}
                                     placeholder='e.g Main Street #21'
+                                    error={formik.errors.address ? true : false}
                                 />
                             </div>
                             <h4 className='py-4'>Payment Method</h4>
@@ -158,7 +233,7 @@ export default function checkout({ user }) {
                                     value={paymentMethod}
                                     onChange={setPaymentMethod}
                                     as='div'
-                                    className='checkout-payment-methods'>
+                                    className='checkout-payment-methods '>
                                     <RadioGroup.Label className='d-none'>
                                         Payment Method
                                     </RadioGroup.Label>
@@ -201,10 +276,12 @@ export default function checkout({ user }) {
                                 </RadioGroup>
                             </div>
                             <div className='d-flex align-items-center justify-content-end mt-5'>
-                                <button className='btn me-3'>
-                                    Cancel Order
-                                </button>
-                                <button className='btn btn-primary py-2'>
+                                <Link href='/' replace>
+                                    <a className='btn me-3'>Cancel Order</a>
+                                </Link>
+                                <button
+                                    className='btn btn-primary py-2'
+                                    type='submit'>
                                     Complete Checkout
                                 </button>
                             </div>
@@ -212,33 +289,7 @@ export default function checkout({ user }) {
                     </div>
                 </div>
             </div>
-            <Modal isOpen={true} close={isAuthOpen}>
-                <div className='d-flex flex-column align-items-center justify-content-center'>
-                    <h3 className='text-center fw-bold'>Order Submitted</h3>
-                    <img
-                        src='/static/images/package.svg'
-                        alt=''
-                        width='200px'
-                        height='auto'
-                        className='my-5'
-                    />
-                    <p className='text-center mb-4'>
-                        Your order has been submitted and you can check the
-                        progress in your profile page.
-                    </p>
-                    <div className='d-flex align-items-center justify-content-end w-100'>
-                        <Link href='/' replace>
-                            <a className='btn'>Back to Home Page</a>
-                        </Link>
-                        <Link href='/profile' replace>
-                            <button className='btn btn-primary'>
-                                Check Profile
-                            </button>
-                        </Link>
-                    </div>
-                </div>
-            </Modal>
-            <Auth isOpen={isAuthOpen} close={setIsAuthOpen} />
+            {isAuthOpen && <Auth isOpen={isAuthOpen} />}
             <Footer />
         </div>
     )

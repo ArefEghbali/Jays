@@ -219,6 +219,11 @@
     right: 0;
     bottom: 0;
     z-index: 9998;
+    display: none;
+
+    &.show {
+        display: inline-block;
+    }
 
     .overlay {
         position: fixed;

@@ -5,6 +5,7 @@ import {
     updateCartQuantityDB,
     getCartDB,
     removeCartDB,
+    clearCartDB,
 } from '../utils/indexeddb'
 
 const appContext = createContext({})
@@ -81,11 +82,20 @@ export const Provider = ({ children }) => {
         })
     }
 
+    const clearCart = () => {
+        setContextData((prev) => ({
+            ...prev,
+            cart: [],
+        }))
+        clearCartDB()
+    }
+
     const [contextData, setContextData] = useState({
         cart: [],
         addToCart: handleAddToCart,
         updateQuantity,
         removeItem,
+        clearCart,
     })
 
     useEffect(() => {

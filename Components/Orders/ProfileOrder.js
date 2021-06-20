@@ -20,11 +20,11 @@ export default function ProfileOrder({ order }) {
         <ProfileOrderStyle>
             <div className='d-flex align-items-center justify-content-between'>
                 <span>
-                    <b>Order ID</b>
+                    <b className='me-2'>Order ID</b>
                     {order.id}
                 </span>
                 <span>
-                    <b>Order Status</b>
+                    <b className='me-2'>Order Status</b>
                     <span
                         className={`${
                             order.status === 'cancelled'
@@ -35,42 +35,47 @@ export default function ProfileOrder({ order }) {
                     </span>
                 </span>
             </div>
-            {order.products.map((product) => (
-                <Link
-                    href={{ pathname: '/product', query: { pid: product.id } }}>
-                    <a>
-                        <Image
-                            src={product.image}
-                            alt={product.title}
-                            width={64}
-                            height={52}
-                            objectFit={'contain'}
-                        />
-                    </a>
-                </Link>
-            ))}
+            <div className='d-flex align-items-center jusitfy-content-start'>
+                {order.product.map((product) => (
+                    <Link
+                        href={{
+                            pathname: '/product',
+                            query: { pid: product.id },
+                        }}
+                        key={product.id}>
+                        <a className='me-3 mt-3'>
+                            <Image
+                                src={product.image}
+                                alt={product.title}
+                                width={64}
+                                height={52}
+                                objectFit={'contain'}
+                            />
+                        </a>
+                    </Link>
+                ))}
+            </div>
             <div className='d-flex align-items-center justify-content-between'>
                 <span>
                     <b>Total Items</b>
-                    {order.products.length}
+                    {order.product.length}
                 </span>
                 <span>
                     <b>Total Price</b>
-                    <span
-                        className={`${
-                            order.status === 'cancelled'
-                                ? 'text-danger'
-                                : 'text-success'
-                        }`}>
-                        <h4 className='fw-bold'>
-                            ${calcTotalPrice(order.products)}
-                        </h4>
+                    <span className={`text-center`}>
+                        <h4 className='fw-bold'>${order.total}</h4>
                     </span>
                 </span>
             </div>
-            {order.status === 'ongoing' ? (
-                <button className='btn text-danger'>Cancel Order</button>
-            ) : null}
+            <div className='d-flex align-items-center justify-content-between mt-4'>
+                <p>
+                    <b>Shipping Address:</b>
+                    {order.address}
+                </p>
+                {order.status === 'OnGoing' ? (
+                    <button className='btn text-danger'>Cancel Order</button>
+                ) : null}
+            </div>
         </ProfileOrderStyle>
     )
 }
