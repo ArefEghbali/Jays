@@ -78,15 +78,19 @@ export default function Topbar({ user }) {
                                     <ChevronDown size={24} className='ms-2' />
                                 </Menu.Button>
                                 <Menu.Items className='topbar-user-profile'>
-                                    <Menu.Item
-                                        as='button'
-                                        className='btn d-block mt-2 w-100 text-start'>
-                                        Profile
+                                    <Menu.Item>
+                                        <Link href='/profile'>
+                                            <a className='btn d-block mt-2 w-100 text-start'>
+                                                Profile
+                                            </a>
+                                        </Link>
                                     </Menu.Item>
-                                    <Menu.Item
-                                        as='button'
-                                        className='btn d-block mt-2 w-100 text-start'>
-                                        Sign Out
+                                    <Menu.Item>
+                                        <Link href='/auth/logout'>
+                                            <a className='btn d-block mt-2 w-100 text-start'>
+                                                Sign Out
+                                            </a>
+                                        </Link>
                                     </Menu.Item>
                                 </Menu.Items>
                             </Menu>

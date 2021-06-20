@@ -140,6 +140,7 @@ export default function Home({ products, brands, user }) {
                                     alt='Addidas Sneaker'
                                     width='700px'
                                     height='537px'
+                                    priority
                                 />
                                 <div className='circle first'></div>
                                 <div className='circle second'></div>
@@ -164,7 +165,7 @@ export default function Home({ products, brands, user }) {
                             <h2>For Women</h2>
                             <Link href='/collection/women'>
                                 <a>
-                                    Check Collection{' '}
+                                    Check Collection
                                     <ArrowRight size={24} className='ms-2' />
                                 </a>
                             </Link>
@@ -182,7 +183,7 @@ export default function Home({ products, brands, user }) {
                             <h2>For Men</h2>
                             <Link href='/collection/men'>
                                 <a>
-                                    Check Collection{' '}
+                                    Check Collection
                                     <ArrowRight size={24} className='ms-2' />
                                 </a>
                             </Link>

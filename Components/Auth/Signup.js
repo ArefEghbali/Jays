@@ -2,13 +2,14 @@ import React, { useState } from 'react'
 import FormInput from '../FormInput/FormInput'
 import { useFormik } from 'formik'
 import axios from 'axios'
-import Router from 'next/router'
 
 import isAlpha from 'validator/lib/isAlpha'
 import isEmail from 'validator/lib/isEmail'
 
 export default function Signup() {
     const [error, setError] = useState('')
+
+    console.log(process.env.BASE_API_URL)
 
     const formik = useFormik({
         initialValues: {
