@@ -8,8 +8,6 @@ import axios from 'axios'
 export default function Login() {
     const [error, setError] = useState('')
 
-    console.log(process.env.BASE_API_URL)
-
     const formik = useFormik({
         initialValues: {
             email: '',
@@ -32,7 +30,7 @@ export default function Login() {
         },
         onSubmit: (values) => {
             axios
-                .post(`https://jaysneakers.herokuapp.com/api/auth/login`, {
+                .post('https://jaysneakers.herokuapp.com/api/auth/login', {
                     email: values.email,
                     password: values.password,
                 })
