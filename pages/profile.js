@@ -5,8 +5,10 @@ import Topbar from '../Components/Topbar/Topbar'
 import Footer from '../Components/Footer/Footer'
 import styled from 'styled-components'
 import prismaclient from '../utils/prismaclient'
+import { motion, AnimatePresence } from 'framer-motion'
 
 import UserOrders from '../Components/Orders/UserOrders'
+import Account from '../Components/Profile/Account'
 
 const ProfileTabs = styled.div`
     display: flex;
@@ -46,13 +48,17 @@ export async function getServerSideProps({ req, res }) {
                 where: {
                     uid: response.data.data.pid,
                 },
-                select: {
-                    address: true,
-                    id: true,
-                    orderedAt: true,
-                    status: true,
-                    product: true,
-                    total: true,
+                include: {
+                    products: {
+                        include: {
+                            product: {
+                                select: {
+                                    image: true,
+                                    title: true,
+                                },
+                            },
+                        },
+                    },
                 },
             })
 
@@ -60,10 +66,21 @@ export async function getServerSideProps({ req, res }) {
                 (prevOrder) => prevOrder.status === 'OnGoing'
             )
 
+            let cancelled = orders.filter(
+                (prevOrder) => prevOrder.status === 'Cancelled'
+            )
+
+            let currentUser = await prismaclient.user.findUnique({
+                where: {
+                    id: response.data.data.pid,
+                },
+            })
+
             return {
                 props: {
-                    user: response.data.data,
+                    user: JSON.parse(JSON.stringify(currentUser)),
                     ongoing: JSON.parse(JSON.stringify(ongoing)),
+                    cancelled: JSON.parse(JSON.stringify(cancelled)),
                 },
             }
         }
@@ -77,8 +94,20 @@ export async function getServerSideProps({ req, res }) {
     }
 }
 
-export default function profile({ user, ongoing }) {
+export default function profile({ user, ongoing, cancelled }) {
     const [activeTab, setActiveTab] = useState('order')
+
+    const handleLogOut = () => {
+        axios
+            .get(`${process.env.BASE_API_URL}auth/logout`)
+            .then((response) => {
+                if (response.data.status === 200) {
+                    Router.replace('/')
+                }
+            })
+            .catch((err) => console.log(err))
+    }
+
     return (
         <div>
             <Head>
@@ -101,11 +130,34 @@ export default function profile({ user, ongoing }) {
                         } btn`}>
                         Account
                     </button>
-                    <button className='btn'>Log Out</button>
+                    <button className='btn' onClick={() => handleLogOut()}>
+                        Log Out
+                    </button>
                 </ProfileTabs>
-                <UserOrders orders={ongoing} title='OnGoing' defaultOpen />
-                <UserOrders orders={[]} title='Completed' />
-                <UserOrders orders={[]} title='Cancelled' />
+                <AnimatePresence>
+                    {activeTab === 'order' && (
+                        <motion.div
+                            initial={{ opacity: 0, scale: 0.8 }}
+                            animate={{ opacity: 1, scale: 1 }}>
+                            <UserOrders
+                                orders={ongoing}
+                                title='OnGoing'
+                                defaultOpen
+                            />
+                            <UserOrders orders={[]} title='Completed' />
+                            <UserOrders orders={cancelled} title='Cancelled' />
+                        </motion.div>
+                    )}
+                </AnimatePresence>
+                <AnimatePresence>
+                    {activeTab === 'account' && (
+                        <motion.div
+                            initial={{ opacity: 0, scale: 0.8 }}
+                            animate={{ opacity: 1, scale: 1 }}>
+                            <Account user={user} />
+                        </motion.div>
+                    )}
+                </AnimatePresence>
             </div>
             <Footer />
         </div>

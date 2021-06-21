@@ -97,20 +97,23 @@ export default function checkout({ user }) {
             return errors
         },
         onSubmit: (values) => {
-            let address = `${values.state}, ${values.city}, ${values.address}`
-            let orders = []
+            let orderItems = []
 
             globalContext.cart.forEach((item) => {
-                orders.push(item.id)
+                orderItems.push({
+                    productid: item.id,
+                    price: item.price,
+                    quantity: item.quantity,
+                })
             })
 
             axios
-                .post(`${process.env.BASE_API_URL}orders/newOrder`, {
+                .post(`${process.env.BASE_API_URL}orders/placeOrder`, {
                     uid: user.pid,
-                    products: orders,
-                    address: address,
                     status: 'OnGoing',
+                    address: `${values.state}, ${values.city}, ${values.address}`,
                     total: calcTotalPrice(globalContext.cart),
+                    orderItems: orderItems,
                 })
                 .then((response) => {
                     if (response.data.status === 200) {

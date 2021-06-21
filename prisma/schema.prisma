@@ -27,7 +27,8 @@ model Product {
   image       String
   discount    Float           @default(0.0)
   category    ProductCategory
-  order       Order[]
+  orderItemId String?
+  orderItem   OrderDetails[]
 }
 
 model Brand {
@@ -49,13 +50,23 @@ model User {
   order     Order[]
 }
 
+model OrderDetails {
+  id        String  @id @default(uuid())
+  orderid   String
+  order     Order   @relation(fields: [orderid], references: [id])
+  productid String
+  product   Product @relation(fields: [productid], references: [id])
+  quantity  Int
+  price     Decimal
+}
+
 model Order {
-  id        String    @id @default(uuid())
+  id        String         @id @default(uuid())
   uid       String
-  user      User      @relation(fields: [uid], references: [id])
-  product   Product[]
-  orderedAt DateTime  @default(now())
+  user      User           @relation(fields: [uid], references: [id])
+  orderedAt DateTime       @default(now())
   status    String
   address   String
-  total     Decimal
+  products  OrderDetails[]
+  total     Decimal        @default(0.0)
 }

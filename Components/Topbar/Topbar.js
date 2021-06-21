@@ -2,6 +2,7 @@ import React, { useContext, useState } from 'react'
 import styled from 'styled-components'
 import Link from 'next/link'
 import { motion } from 'framer-motion'
+import Router from 'next/router'
 
 import { Menu } from '@headlessui/react'
 
@@ -11,6 +12,7 @@ import Cart from './Cart'
 import appContext from '../../context/appContext'
 
 import { User, Search, ChevronDown } from 'react-feather'
+import axios from 'axios'
 
 const TopbarStyle = styled(motion.nav)`
     background-color: white;
@@ -47,6 +49,17 @@ export default function Topbar({ user }) {
     const globalContext = useContext(appContext)
     const [isAuthOpen, setIsAuthOpen] = useState(false)
 
+    const handleLogOut = () => {
+        axios
+            .get(`${process.env.BASE_API_URL}auth/logout`)
+            .then((response) => {
+                if (response.data.status === 200) {
+                    Router.replace('/')
+                }
+            })
+            .catch((err) => console.log(err))
+    }
+
     return (
         <TopbarStyle
             initial={{ opacity: 0, y: -40 }}
@@ -70,11 +83,13 @@ export default function Topbar({ user }) {
                         <TopbarSearch placeholder='Search Sneakers...' />
                     </div>
                     <div className='d-flex align-items-center justify-content-end'>
-                        {user && user.hasOwnProperty('fullname') ? (
+                        {(user && user.hasOwnProperty('firstName')) ||
+                        user.hasOwnProperty('fullname') ? (
                             <Menu as='div' className='position-relative'>
                                 <Menu.Button className='btn d-flex align-items-center'>
                                     <User className='me-2' size={24} />
-                                    {user.fullname}
+                                    {user.fullname ||
+                                        `${user.firstName} ${user.lastName}`}
                                     <ChevronDown size={24} className='ms-2' />
                                 </Menu.Button>
                                 <Menu.Items className='topbar-user-profile'>
@@ -86,11 +101,11 @@ export default function Topbar({ user }) {
                                         </Link>
                                     </Menu.Item>
                                     <Menu.Item>
-                                        <Link href='/auth/logout'>
-                                            <a className='btn d-block mt-2 w-100 text-start'>
-                                                Sign Out
-                                            </a>
-                                        </Link>
+                                        <button
+                                            className='btn d-block mt-2 w-100 text-start'
+                                            onClick={() => handleLogOut()}>
+                                            Sign Out
+                                        </button>
                                     </Menu.Item>
                                 </Menu.Items>
                             </Menu>

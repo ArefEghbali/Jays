@@ -13,6 +13,7 @@ CREATE TABLE "Product" (
     "image" TEXT NOT NULL,
     "discount" DOUBLE PRECISION NOT NULL DEFAULT 0.0,
     "category" "ProductCategory" NOT NULL,
+    "poid" TEXT NOT NULL,
 
     PRIMARY KEY ("id")
 );
@@ -46,33 +47,34 @@ CREATE TABLE "Order" (
     "uid" TEXT NOT NULL,
     "orderedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "status" TEXT NOT NULL,
+    "address" TEXT NOT NULL,
+    "total" DECIMAL(65,30) NOT NULL,
 
     PRIMARY KEY ("id")
 );
 
 -- CreateTable
-CREATE TABLE "_OrderToProduct" (
-    "A" TEXT NOT NULL,
-    "B" TEXT NOT NULL
+CREATE TABLE "ProductForOrder" (
+    "id" TEXT NOT NULL,
+    "orderid" TEXT NOT NULL,
+
+    PRIMARY KEY ("id")
 );
 
 -- CreateIndex
 CREATE UNIQUE INDEX "User.email_unique" ON "User"("email");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "_OrderToProduct_AB_unique" ON "_OrderToProduct"("A", "B");
-
--- CreateIndex
-CREATE INDEX "_OrderToProduct_B_index" ON "_OrderToProduct"("B");
+CREATE UNIQUE INDEX "ProductForOrder_orderid_unique" ON "ProductForOrder"("orderid");
 
 -- AddForeignKey
 ALTER TABLE "Product" ADD FOREIGN KEY ("bid") REFERENCES "Brand"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
+ALTER TABLE "Product" ADD FOREIGN KEY ("poid") REFERENCES "ProductForOrder"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
 ALTER TABLE "Order" ADD FOREIGN KEY ("uid") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "_OrderToProduct" ADD FOREIGN KEY ("A") REFERENCES "Order"("id") ON DELETE CASCADE ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "_OrderToProduct" ADD FOREIGN KEY ("B") REFERENCES "Product"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "ProductForOrder" ADD FOREIGN KEY ("orderid") REFERENCES "Order"("id") ON DELETE CASCADE ON UPDATE CASCADE;
