@@ -1,4 +1,5 @@
-import React, { useContext, useState } from 'react'
+import React, { useContext } from 'react'
+import dynamic from 'next/dynamic'
 import styled from 'styled-components'
 import Link from 'next/link'
 import { motion } from 'framer-motion'
@@ -6,7 +7,7 @@ import Router from 'next/router'
 
 import { Menu } from '@headlessui/react'
 
-import Auth from '../Auth/Auth'
+const Auth = dynamic(() => import('../Auth/Auth'))
 
 import Cart from './Cart'
 import appContext from '../../context/appContext'
@@ -17,7 +18,7 @@ import axios from 'axios'
 const TopbarStyle = styled(motion.nav)`
     background-color: white;
     position: sticky;
-    top: 0;
+    top: 0px;
     height: 72px;
     display: flex;
     align-items: center;
@@ -45,9 +46,8 @@ const TopbarSearch = styled.input`
     width: 500px;
 `
 
-export default function Topbar({ user }) {
+export default function Topbar({ user, getSearchKey }) {
     const globalContext = useContext(appContext)
-    const [isAuthOpen, setIsAuthOpen] = useState(false)
 
     const handleLogOut = () => {
         axios
@@ -80,12 +80,19 @@ export default function Topbar({ user }) {
                     </div>
                     <div className='d-lg-flex align-items-center justify-content-start d-none'>
                         <Search size={24} color='#474747' className='me-2' />
-                        <TopbarSearch placeholder='Search Sneakers...' />
+                        <TopbarSearch
+                            placeholder='Search Sneakers...'
+                            onChange={(e) =>
+                                getSearchKey(e.currentTarget.value)
+                            }
+                        />
                     </div>
                     <div className='d-flex align-items-center justify-content-end'>
                         {(user && user.hasOwnProperty('firstName')) ||
                         user.hasOwnProperty('fullname') ? (
-                            <Menu as='div' className='position-relative'>
+                            <Menu
+                                as='div'
+                                className='position-relative d-none d-lg-block'>
                                 <Menu.Button className='btn d-flex align-items-center'>
                                     <User className='me-2' size={24} />
                                     {user.fullname ||
@@ -112,7 +119,9 @@ export default function Topbar({ user }) {
                         ) : (
                             <button
                                 className='btn d-none d-lg-flex'
-                                onClick={() => setIsAuthOpen(true)}>
+                                onClick={() =>
+                                    globalContext.toggleShowLogin(true)
+                                }>
                                 <User className='me-2' size={24} />
                                 SignUp/Login
                             </button>
@@ -121,7 +130,7 @@ export default function Topbar({ user }) {
                     </div>
                 </TopbarMenus>
             </div>
-            <Auth isOpen={isAuthOpen} close={setIsAuthOpen} />
+            <Auth isOpen={globalContext.showLogin} />
         </TopbarStyle>
     )
 }

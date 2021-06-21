@@ -25,7 +25,7 @@ export default function OnGoingOrder({ orders, title, defaultOpen }) {
                     ))
                 ) : (
                     <div className='d-flex align-items-center justify-content-center flex-column'>
-                        <h4 className='text-muted'>
+                        <h4 className='text-muted text-center'>
                             You don't have any on {title.toLowerCase()} orders
                         </h4>
                         {title === 'OnGoing' || title === 'Completed' ? (

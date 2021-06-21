@@ -6,23 +6,34 @@ import Footer from '../Components/Footer/Footer'
 import styled from 'styled-components'
 import prismaclient from '../utils/prismaclient'
 import { motion, AnimatePresence } from 'framer-motion'
+import Router from 'next/router'
 
 import UserOrders from '../Components/Orders/UserOrders'
 import Account from '../Components/Profile/Account'
+import BottomNavigation from '../Components/BottomNavigation/BottomNavigation'
 
 const ProfileTabs = styled.div`
     display: flex;
     align-items: center;
     justify-content: flex-start;
     margin-top: 40px;
+    flex-wrap: nowrap;
+    overflow-x: scroll;
+    scrollbar-width: none;
+
+    &::-webkit-scrollbar {
+        display: none;
+    }
 
     button {
+        flex: 1 0 auto;
         border-radius: 0px;
         border: none;
         border-bottom: 2px solid transparent;
         font-size: 24px;
         font-weight: 600;
         padding: 10px 20px;
+        max-width: max-content;
 
         &.active {
             border-color: #111;
@@ -159,6 +170,7 @@ export default function profile({ user, ongoing, cancelled }) {
                     )}
                 </AnimatePresence>
             </div>
+            <BottomNavigation active='user' />
             <Footer />
         </div>
     )

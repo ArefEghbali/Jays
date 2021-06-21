@@ -71,16 +71,34 @@ export default function FilterBar({
         filterBrand(brand)
     }
 
+    const handleCollection = (e) => {
+        if (e.target.checked) {
+            filterCollection(e.target.value)
+        } else {
+            filterCollection('all')
+        }
+    }
+
     return (
         <FilterStyle>
             <h4 className='fw-bold mb-3'>Collections</h4>
-            <FilterOption onClick={() => filterCollection('Men')}>
+            <FilterOption>
                 Men
-                <input type='checkbox' />
+                <input
+                    type='checkbox'
+                    value='Men'
+                    name='men'
+                    onChange={(e) => handleCollection(e)}
+                />
             </FilterOption>
-            <FilterOption onClick={() => filterCollection('Women')}>
+            <FilterOption>
                 Women
-                <input type='checkbox' />
+                <input
+                    type='checkbox'
+                    value='Women'
+                    name='women'
+                    onChange={(e) => handleCollection(e)}
+                />
             </FilterOption>
             <hr />
             <h4 className='fw-bold mb-3'>Sizes</h4>

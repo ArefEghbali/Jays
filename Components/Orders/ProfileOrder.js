@@ -13,6 +13,7 @@ const ProfileOrderStyle = styled.div`
     justify-content: space-between;
     flex-direction: column;
     width: 100%;
+    margin-top: 20px;
 `
 
 export default function ProfileOrder({ order }) {
@@ -31,12 +32,12 @@ export default function ProfileOrder({ order }) {
 
     return (
         <ProfileOrderStyle>
-            <div className='d-flex align-items-center justify-content-between'>
+            <div className='d-flex align-items-center justify-content-between flex-column-mobile'>
                 <span>
                     <b className='me-2'>Order ID</b>
                     {order.id}
                 </span>
-                <span>
+                <span className='order-status'>
                     <b className='me-2'>Order Status</b>
                     <span
                         className={`${
@@ -48,7 +49,7 @@ export default function ProfileOrder({ order }) {
                     </span>
                 </span>
             </div>
-            <div className='d-flex align-items-center jusitfy-content-start'>
+            <div className='d-flex align-items-center jusitfy-content-start my-4'>
                 {order.products.map((product) => (
                     <Link
                         href={{
@@ -80,7 +81,7 @@ export default function ProfileOrder({ order }) {
                     </span>
                 </span>
             </div>
-            <div className='d-flex align-items-center justify-content-between mt-4'>
+            <div className='d-flex align-items-center justify-content-between mt-4 flex-column-mobile'>
                 <p>
                     <b>Shipping Address:</b>
                     {order.address}

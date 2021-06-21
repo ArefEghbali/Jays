@@ -20,7 +20,7 @@ const TabItem = styled.h4`
     }
 `
 
-export default function Auth({ isOpen, close }) {
+export default function Auth({ isOpen }) {
     const [currentTab, setCurrentTab] = useState('login')
 
     return (

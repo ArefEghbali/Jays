@@ -5,12 +5,13 @@ import Link from 'next/link'
 import Topbar from '../Components/Topbar/Topbar'
 import { motion } from 'framer-motion'
 import prismaclient from '../utils/prismaclient'
-import { Plus, Minus, ArrowRight } from 'react-feather'
+import { Plus, Minus, ArrowRight, Filter } from 'react-feather'
 import axios from 'axios'
 
 import FilterBar from '../Components/FilterBar/FilterBar'
 import Footer from '../Components/Footer/Footer'
 import SingleProduct from '../Components/Product/SingleProduct'
+import BottomNavigation from '../Components/BottomNavigation/BottomNavigation'
 
 export async function getServerSideProps({ req, res }) {
     if (typeof window === 'undefined') {
@@ -51,6 +52,7 @@ export async function getServerSideProps({ req, res }) {
 
 export default function Home({ products, brands, user }) {
     const [allProducts, setAllProducts] = useState(products)
+    const [toggleFilter, setToggleFilter] = useState(false)
 
     const filterOnBrand = (brand) => {
         setAllProducts((prev) => {
@@ -61,7 +63,12 @@ export default function Home({ products, brands, user }) {
     }
 
     const filterByCollection = (collection) => {
+        console.log(collection)
         setAllProducts((prev) => {
+            if (collection === 'all') {
+                return products
+            }
+
             let newList = prev.filter(
                 (prevItem) => prevItem.category === collection
             )
@@ -80,6 +87,20 @@ export default function Home({ products, brands, user }) {
         })
     }
 
+    const returnSearchResult = (keyword) => {
+        setAllProducts((prev) => {
+            if (keyword.length && keyword !== '') {
+                let newList = prev.filter((prevItem) =>
+                    prevItem.title.toLowerCase().includes(keyword.toLowerCase())
+                )
+
+                return newList
+            } else {
+                return products
+            }
+        })
+    }
+
     return (
         <motion.div exit={{ opacity: 0 }}>
             <Head>
@@ -95,7 +116,7 @@ export default function Home({ products, brands, user }) {
                     rel='stylesheet'
                 />
             </Head>
-            <Topbar user={user || {}} />
+            <Topbar user={user || {}} getSearchKey={returnSearchResult} />
             <motion.div
                 className='hero'
                 initial={{ opacity: 0 }}
@@ -103,7 +124,7 @@ export default function Home({ products, brands, user }) {
                 transition={{ delay: 0.65 }}>
                 <div className='container'>
                     <div className='row'>
-                        <div className='col-12 col-lg-6'>
+                        <div className='col-12 col-lg-6 mobile-order-2'>
                             <div className='description'>
                                 <motion.h1
                                     initial={{ opacity: 0, x: -50 }}
@@ -129,7 +150,7 @@ export default function Home({ products, brands, user }) {
                                 </div>
                             </div>
                         </div>
-                        <div className='col-12 col-md-6'>
+                        <div className='col-12 col-md-6 mobile-order-1'>
                             <motion.div
                                 className='photo-section'
                                 initial={{ opacity: 0, scale: 0.7 }}
@@ -192,7 +213,15 @@ export default function Home({ products, brands, user }) {
                     </div>
                 </div>
                 <div className='row products-section'>
-                    <div className='col-3 d-none d-lg-flex'>
+                    <button
+                        className='btn btn-secondary filter-toggle'
+                        onClick={() => setToggleFilter((prev) => !prev)}>
+                        <Filter size={24} />
+                    </button>
+                    <div
+                        className={`col-3 filter-sidebar ${
+                            toggleFilter ? 'show' : ''
+                        }`}>
                         <FilterBar
                             brands={brands}
                             filterBrand={filterOnBrand}
@@ -215,6 +244,7 @@ export default function Home({ products, brands, user }) {
                     </div>
                 </div>
             </div>
+            <BottomNavigation active={'home'} user={user} />
             <Footer />
         </motion.div>
     )

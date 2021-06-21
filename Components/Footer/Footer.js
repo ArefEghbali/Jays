@@ -10,7 +10,7 @@ const FooterStyle = styled.footer`
 
 export default function Footer() {
     return (
-        <FooterStyle>
+        <FooterStyle className='footer'>
             <div className='container'>
                 <div className='row'>
                     <div className='col-12 col-lg-4'>

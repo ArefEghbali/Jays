@@ -59,9 +59,11 @@ export default function SingleProduct({ product }) {
             <Popover className='position-relative'>
                 <Popover.Button className='btn btn-outline-dark mt-2 py-3 w-100'>
                     <div className='d-flex align-items-center justify-content-between'>
-                        <span>
+                        <span className='d-flex'>
                             <ShoppingCart size={24} className='me-2' />
-                            Add To Cart
+                            <span className='d-none d-lg-flex'>
+                                Add To Cart
+                            </span>
                         </span>
                         <b>${product.price}</b>
                     </div>

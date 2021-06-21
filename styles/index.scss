@@ -350,3 +350,117 @@
     margin-top: 40px;
     margin-bottom: 20px;
 }
+
+.filter-toggle {
+    display: none;
+    position: fixed;
+    right: 20px;
+    bottom: 100px;
+    z-index: 9997;
+    width: max-content;
+}
+
+@media only screen and (max-width: 1024px) {
+    .filter-sidebar {
+        display: none;
+        width: 100%;
+        position: fixed;
+        left: 0;
+        right: 0;
+        bottom: 80px;
+        z-index: 9989;
+        background-color: white;
+        overflow-y: auto;
+
+        &.show {
+            display: flex;
+        }
+    }
+
+    .footer {
+        margin-bottom: 80px;
+    }
+
+    .hero {
+        min-height: 100vh;
+
+        .mobile-order-1 {
+            margin-bottom: 50px !important;
+        }
+
+        h1 {
+            font-size: 36px;
+            line-height: 36px * 1.285;
+        }
+
+        .circle {
+            border-width: 15px !important;
+
+            &.first {
+                width: 120px !important;
+                height: 120px !important;
+                left: 30% !important;
+                top: -30px !important;
+            }
+
+            &.second {
+                width: 100px !important;
+                height: 100px !important;
+                bottom: 0px !important;
+            }
+        }
+    }
+
+    .mobile-order-1 {
+        order: 1;
+    }
+
+    .mobile-order-2 {
+        order: 2;
+    }
+
+    .collection {
+        margin-bottom: 40px;
+    }
+
+    .products-section {
+        margin-top: 50px;
+    }
+
+    .products-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .auth-modal {
+        .panel {
+            width: 95%;
+        }
+    }
+
+    .cart-popover {
+        right: 0;
+        width: 100vw;
+    }
+
+    .checkout-payment-methods {
+        grid-template-columns: 1fr;
+    }
+
+    .order-status {
+        width: 100%;
+        text-align: left;
+        margin-top: 10px;
+    }
+
+    .flex-column-mobile {
+        flex-direction: column;
+
+        &.align-start-mobile {
+            align-items: flex-start;
+        }
+    }
+
+    .filter-toggle {
+        display: block;
+    }
+}

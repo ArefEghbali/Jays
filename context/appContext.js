@@ -90,12 +90,21 @@ export const Provider = ({ children }) => {
         clearCartDB()
     }
 
+    const handleToggleLogin = (value) => {
+        setContextData((prev) => ({
+            ...prev,
+            showLogin: value,
+        }))
+    }
+
     const [contextData, setContextData] = useState({
         cart: [],
         addToCart: handleAddToCart,
         updateQuantity,
         removeItem,
         clearCart,
+        showLogin: false,
+        toggleShowLogin: handleToggleLogin,
     })
 
     useEffect(() => {

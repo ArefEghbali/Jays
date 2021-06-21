@@ -236,7 +236,7 @@ export default function checkout({ user }) {
                                     value={paymentMethod}
                                     onChange={setPaymentMethod}
                                     as='div'
-                                    className='checkout-payment-methods '>
+                                    className='checkout-payment-methods'>
                                     <RadioGroup.Label className='d-none'>
                                         Payment Method
                                     </RadioGroup.Label>

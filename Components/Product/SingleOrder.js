@@ -9,6 +9,10 @@ const OrderStyle = styled.div`
     justify-items: start;
     padding: 20px 0px;
     border-bottom: 1px solid rgba(33, 33, 33, 0.1);
+
+    @media only screen and (max-width: 1024px) {
+        grid-template-columns: 1fr 2fr;
+    }
 `
 
 export default function SingleOrder({ order }) {
