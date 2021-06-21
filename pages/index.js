@@ -22,7 +22,7 @@ export async function getServerSideProps({ req, res }) {
 
         if (token !== '') {
             let response = await axios.get(
-                `${process.env.BASE_API_URL}auth/verify`,
+                `https://jaysneakers.herokuapp.com/api/auth/verify`,
                 {
                     headers: {
                         authorization: token,

@@ -40,7 +40,7 @@ export default function Signup() {
         },
         onSubmit: (values) => {
             axios
-                .post(`${process.env.BASE_API_URL}auth/signup`, {
+                .post(`https://jaysneakers.herokuapp.com/api/auth/signup`, {
                     fullname: values.fullname,
                     email: values.email,
                     password: values.password,
