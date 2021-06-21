@@ -8,6 +8,8 @@ import axios from 'axios'
 export default function Login() {
     const [error, setError] = useState('')
 
+    console.log(process.env.BASE_API_URL)
+
     const formik = useFormik({
         initialValues: {
             email: '',
