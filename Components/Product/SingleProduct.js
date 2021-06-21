@@ -70,7 +70,7 @@ export default function SingleProduct({ product }) {
                 </Popover.Button>
                 <Popover.Panel className='product-popover-panel'>
                     <h4>Select Size</h4>
-                    <div className='d-flex align-items-center justify-content-start'>
+                    <div className='d-flex align-items-center justify-content-start flex-wrap'>
                         {product.sizes.map((size) => (
                             <span
                                 className={`${

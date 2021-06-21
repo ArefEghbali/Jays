@@ -4,6 +4,7 @@ import prismaclient from '../utils/prismaclient'
 import Image from 'next/image'
 import Link from 'next/link'
 import { motion } from 'framer-motion'
+import axios from 'axios'
 
 import appContext from '../context/appContext'
 
@@ -12,8 +13,9 @@ import { Plus, Minus, ShoppingCart, Heart } from 'react-feather'
 import Topbar from '../Components/Topbar/Topbar'
 import Footer from '../Components/Footer/Footer'
 
-export async function getServerSideProps({ query }) {
+export async function getServerSideProps({ req, query }) {
     const { pid } = query
+    const token = req.cookies.token || ''
 
     let product = await prismaclient.product.findUnique({
         where: {
@@ -21,14 +23,35 @@ export async function getServerSideProps({ query }) {
         },
     })
 
+    if (token !== '') {
+        let response = await axios.get(
+            'https://jaysneakers.herokuapp.com/api/auth/verify',
+            {
+                headers: {
+                    authorization: token,
+                },
+            }
+        )
+
+        if (response.data.status === 200) {
+            return {
+                props: {
+                    product: JSON.parse(JSON.stringify(product)),
+                    user: response.data.data,
+                },
+            }
+        }
+    }
+
     return {
         props: {
             product: JSON.parse(JSON.stringify(product)),
+            user: {},
         },
     }
 }
 
-export default function product({ product }) {
+export default function product({ product, user }) {
     const [quantity, setQuantity] = useState(1)
     const [selectedSize, setSelectedSize] = useState(product.sizes[0])
 
@@ -63,7 +86,7 @@ export default function product({ product }) {
             <Head>
                 <title>Jays. | {product.title}</title>
             </Head>
-            <Topbar />
+            <Topbar user={user} />
             <div className='product-container'>
                 <div className='row'>
                     <div className='col-12 col-lg-6 product-image'>
@@ -140,7 +163,6 @@ export default function product({ product }) {
                             <Heart size={24} className='me-3' />
                             Add To Wishlist
                         </button>
-                        <h2 className='mt-5 fw-bold'>More From This Brand</h2>
                     </motion.div>
                 </div>
             </div>

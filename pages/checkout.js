@@ -108,13 +108,16 @@ export default function checkout({ user }) {
             })
 
             axios
-                .post(`${process.env.BASE_API_URL}orders/placeOrder`, {
-                    uid: user.pid,
-                    status: 'OnGoing',
-                    address: `${values.state}, ${values.city}, ${values.address}`,
-                    total: calcTotalPrice(globalContext.cart),
-                    orderItems: orderItems,
-                })
+                .post(
+                    `https://jaysneakers.herokuapp.com/api/orders/placeOrder`,
+                    {
+                        uid: user.pid,
+                        status: 'OnGoing',
+                        address: `${values.state}, ${values.city}, ${values.address}`,
+                        total: calcTotalPrice(globalContext.cart),
+                        orderItems: orderItems,
+                    }
+                )
                 .then((response) => {
                     if (response.data.status === 200) {
                         globalContext.clearCart()
