@@ -19,7 +19,7 @@ const ProfileOrderStyle = styled.div`
 export default function ProfileOrder({ order }) {
     const handleCancelOrder = (orderid) => {
         axios
-            .post(`${process.env.BASE_API_URL}orders/cancelOrder`, {
+            .post(`https://jaysneakers.herokuapp.com/api/orders/cancelOrder`, {
                 orderid,
             })
             .then((response) => {

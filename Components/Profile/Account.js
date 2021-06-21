@@ -34,7 +34,7 @@ export default function Account({ user }) {
         },
         onSubmit: (values) => {
             axios
-                .post(`${process.env.BASE_API_URL}updateaccount`, {
+                .post(`https://jaysneakers.herokuapp.com/api/updateaccount`, {
                     email: values.email,
                     fullname: values.fullname,
                     uid: user.id,

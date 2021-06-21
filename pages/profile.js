@@ -110,7 +110,7 @@ export default function profile({ user, ongoing, cancelled }) {
 
     const handleLogOut = () => {
         axios
-            .get(`${process.env.BASE_API_URL}auth/logout`)
+            .get(`https://jaysneakers.herokuapp.com/api/auth/logout`)
             .then((response) => {
                 if (response.data.status === 200) {
                     Router.replace('/')
